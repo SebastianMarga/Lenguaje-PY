@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Estadísticas Deportivas</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='CSS/Dash.css') }}"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Izquierdo -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">
+            <i class="fas fa-users"></i>
+            <span>FIFA 22</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <h3 class="nav-title">Navegación</h3>
+          <ul class="nav-menu">
+            <li class="nav-item active">
+              <a href="#" data-section="home" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Página Principal</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" data-section="best11" class="nav-link">
+                <i class="fas fa-trophy"></i>
+                <span>Mejor 11 del Mundo</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" data-section="countries" class="nav-link">
+                <i class="fas fa-flag"></i>
+                <span>Mejores Países</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" data-section="stats" class="nav-link">
+                <i class="fas fa-chart-bar"></i>
+                <span>Estadísticas Adicionales</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p>Dashboard v1.0</p>
+        </div>
+      </aside>
+
+      <!-- Contenido Principal -->
+      <main class="main-content">
+        <!-- Sección: Página Principal -->
+        <section id="home" class="content-section active">
+          <div class="page-header">
+            <h1>Pantalla Principal</h1>
+            <p>
+              Bienvenido al panel de control con estadísticas y rankings
+              mundiales
+            </p>
+          </div>
+
+          <!-- Tarjetas de Estadísticas -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-title">Total Jugadores </span>
+                <i class="fas fa-users stat-icon icon-space"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-number">{{ total_jugadores }}</div>
+                <p class="stat-description">+12% desde el mes pasado</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-title">Países Activos </span>
+                <i class="fas fa-globe stat-icon icon-space"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-number">{{numero_pais}}</div>
+                <p class="stat-description">Cobertura mundial completa</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-title">Mejor jugador del Fifa </span>
+                <i class="fas fa-trophy stat-icon icon-space"></i>
+              </div>
+              {% for mejor in primero %}
+              <div class="stat-content">
+                <div class="stat-number">{{ mejor.short_name }}</div>
+                <p class="stat-description">{{ mejor.nationality_name }}</p>
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-title">Mejor pais</span>
+                <i class="fas fa-flag stat-icon icon-space"></i>
+              </div>
+              {% for pais, promedio in best.items() %}
+              <div class="stat-content">
+                <div class="stat-number">{{ pais }}</div>
+                <p class="stat-description">{{ promedio | round(2) }}</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Contenido Principal -->
+          <div class="main-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>
+                  <i class="fas fa-trophy"></i> Mejores jugadores del Fifa 22
+                </h3>
+                <p>Los mejores jugadores seleccionados globalmente</p>
+              </div>
+              <div class="card-content">
+                <div class="player-preview">
+                  {% for jugador in jugadores[:10] %}
+                  <!-- Muestra solo los primeros 5 -->
+                  <div class="player-item">
+                    <div class="player-info">
+                      <span class="player-name">{{ jugador.short_name }}</span>
+                      <span class="player-position"
+                        >{{ jugador.player_positions }}</span
+                      >
+                    </div>
+                    <span class="player-country"
+                      >{{ jugador.nationality_name }} - {{ jugador.club_name
+                      }}</span
+                    >
+                    <span class="player-rating"
+                      >Overall: {{ jugador.overall }}</span
+                    >
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3><i class="fas fa-globe"></i> Top Países</h3>
+                <p>Ranking de países por rendimiento</p>
+              </div>
+              <div class="card-content">
+                <div class="country-preview">
+                  {% for paises, over in paises_mejores.items() %}
+                  <div class="country-item">
+                    <div class="country-info">
+                      <span class="country-rank">#{{ loop.index }}</span>
+                      <span class="country-name">{{ paises }}</span>
+                    </div>
+                    <span class="country-points">{{ over | round(2) }}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sección: Mejor 11 del Mundo -->
+        <section id="best11" class="content-section">
+          <div class="page-header">
+            <h1><i class="fas fa-trophy"></i> Mejor 11 del Mundo</h1>
+            <p>Los mejores jugadores seleccionados globalmente</p>
+          </div>
+
+          <div class="players-grid">
+            <div class="player-card">
+              <div class="player-header">
+                <h3>Lionel Messi</h3>
+                <span class="player-badge">Delantero</span>
+              </div>
+              <div class="player-details">
+                <p><strong>País:</strong> Argentina</p>
+                <p><strong>Club:</strong> Inter Miami</p>
+                <p><strong>Rating:</strong> 95/100</p>
+              </div>
+            </div>
+
+            <div class="player-card">
+              <div class="player-header">
+                <h3>Kylian Mbappé</h3>
+                <span class="player-badge">Delantero</span>
+              </div>
+              <div class="player-details">
+                <p><strong>País:</strong> Francia</p>
+                <p><strong>Club:</strong> Real Madrid</p>
+                <p><strong>Rating:</strong> 94/100</p>
+              </div>
+            </div>
+
+            <div class="player-card">
+              <div class="player-header">
+                <h3>Erling Haaland</h3>
+                <span class="player-badge">Delantero</span>
+              </div>
+              <div class="player-details">
+                <p><strong>País:</strong> Noruega</p>
+                <p><strong>Club:</strong> Manchester City</p>
+                <p><strong>Rating:</strong> 93/100</p>
+              </div>
+            </div>
+
+            <div class="player-card">
+              <div class="player-header">
+                <h3>Kevin De Bruyne</h3>
+                <span class="player-badge">Centrocampista</span>
+              </div>
+              <div class="player-details">
+                <p><strong>País:</strong> Bélgica</p>
+                <p><strong>Club:</strong> Manchester City</p>
+                <p><strong>Rating:</strong> 92/100</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sección: Mejores Países -->
+        <section id="countries" class="content-section">
+          <div class="page-header">
+            <h1><i class="fas fa-globe"></i> Mejores Países</h1>
+            <p>Ranking mundial de países por rendimiento deportivo</p>
+          </div>
+
+          <div class="countries-table">
+            <div class="table-header">
+              <span>Posición</span>
+              <span>País</span>
+              <span>Puntos</span>
+              <span>Mejor jugador</span>
+            </div>
+            {% for pais, promedio in total_paises.items() %}
+            <div class="table-row">
+              <span
+                class="rank {% if loop.index == 1 %} gold {% elif loop.index == 2 %} silver {% elif loop.index == 3 %} bronze {% else %} regular {% endif %}"
+                >#{{ loop.index }}</span
+              >
+              <span class="country">🇧🇷 {{ pais }}</span>
+              <span class="points">{{ promedio | round(2) }}</span>
+              <span class="change positive"
+                >{{ jugador_pais[pais] if pais in jugador_pais else "Jugador no
+                encontrado" }}</span
+              >
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+
+        <!-- Sección: Estadísticas Adicionales -->
+        <section id="stats" class="content-section">
+          <div class="page-header">
+            <h1><i class="fas fa-chart-bar"></i> Estadísticas Adicionales</h1>
+            <p>Métricas detalladas y análisis avanzados</p>
+          </div>
+
+          <div class="additional-stats">
+            <div class="metric-card blue">
+              <div class="metric-value">{{precision_total}}%</div>
+              <div class="metric-label">Precision del analisis</div>
+            </div>
+            <div class="metric-card green">
+              <div class="metric-value">{{numero_pais}}</div>
+              <div class="metric-label">Numero de paises</div>
+            </div>
+            <div class="metric-card purple">
+              <div class="metric-value">5</div>
+              <div class="metric-label">Continentes analizados</div>
+            </div>
+          </div>
+          <div class="charts-section">
+            <div class="chart-card">
+              <h3>Distribución de jugadores por Continente</h3>
+              <div class="chart-placeholder">{{grafico_html | safe}}</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='JS/Dash.js') }}"></script>
+  </body>
+</html>

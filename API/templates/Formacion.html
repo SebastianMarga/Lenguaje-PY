@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formación de Fútbol Interactiva</title>
+    <link rel="stylesheet" href="../static/CSS/formacion.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-card">
+        <h1>⚽ Formación de Fútbol Interactiva</h1>
+
+        <div class="formation-buttons">
+          <button class="btn active" data-formation="4-4-2">4-4-2</button>
+          <button class="btn" data-formation="4-3-3">4-3-3</button>
+          <button class="btn" data-formation="4-2-3-1">4-2-3-1</button>
+        </div>
+
+        <p class="instruction" id="instruction">
+          Haz clic en un jugador para seleccionarlo y luego en el campo para
+          moverlo
+        </p>
+      </div>
+
+      <div class="field-container">
+        <div class="field" id="field">
+          <!-- Líneas del campo -->
+          <div class="center-line"></div>
+          <div class="center-circle">
+            <div class="center-dot"></div>
+          </div>
+
+          <!-- Área grande superior -->
+          <div class="penalty-area top">
+            <div class="goal-area top"></div>
+          </div>
+
+          <!-- Área grande inferior -->
+          <div class="penalty-area bottom">
+            <div class="goal-area bottom"></div>
+          </div>
+
+          <!-- Arcos -->
+          <div class="goal top"></div>
+          <div class="goal bottom"></div>
+
+          <!-- Los jugadores se generarán dinámicamente -->
+        </div>
+      </div>
+
+      <div class="players-info">
+        <h3 id="formation-title">Formación Actual: 4-4-2</h3>
+        <div class="players-grid" id="players-grid">
+          <!-- La información de jugadores se generará dinámicamente -->
+        </div>
+      </div>
+    </div>
+
+    <script src="JS/script.js"></script>
+  </body>
+</html>
