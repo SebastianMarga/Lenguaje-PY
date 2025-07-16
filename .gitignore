@@ -1,1 +1,4 @@
 /Analisis
+
+**/__pycache__/
+*.pyc
