@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FIFA 22 - Lo mejor de la temporada 2022/23</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='CSS/Dash.css') }}"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='img/ICONO.jpg') }}"
+      type="image/x-icon"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">
+            <i class="fas fa-users"></i>
+            <span>FIFA 22</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <h3 class="nav-title">Navegación</h3>
+          <ul class="nav-menu">
+            <li class="nav-item" id="nav-dashboard">
+              <a href="{{ url_for('mostrar_dashboard') }}" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Página Principal</span>
+              </a>
+            </li>
+            <li class="nav-item" id="nav-mejor11">
+              <a href="{{ url_for('mostrar_once') }}" class="nav-link">
+                <i class="fas fa-trophy"></i>
+                <span>Mejor 11 del Mundo</span>
+              </a>
+            </li>
+            <li class="nav-item" id="nav-mejores-paises">
+              <a href="{{ url_for('mejores_paises') }}" class="nav-link">
+                <i class="fas fa-flag"></i>
+                <span>Mejores Países</span>
+              </a>
+            </li>
+            <li class="nav-item" id="nav-estadisticas">
+              <a href="{{ url_for('estadisticas') }}" class="nav-link">
+                <i class="fas fa-chart-bar"></i>
+                <span>Estadísticas Adicionales</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p>FIFA 22</p>
+        </div>
+      </aside>
+      <main class="main-content">
+        <!-- Sección: Mejores Países -->
+        <section id="countries" class="content-section">
+          <div class="page-header">
+            <h1><i class="fas fa-globe"></i> Mejores Países</h1>
+            <p>Ranking mundial de países por rendimiento deportivo</p>
+          </div>
+
+          <div class="countries-table">
+            <div class="table-header">
+              <span>Posición</span>
+              <span>País</span>
+              <span>Puntos</span>
+              <span>Mejor jugador</span>
+            </div>
+            {% for pais, promedio in total_paises.items() %}
+            <div class="table-row">
+              <span
+                class="rank {% if loop.index == 1 %} gold {% elif loop.index == 2 %} silver {% elif loop.index == 3 %} bronze {% else %} regular {% endif %}"
+                >#{{ loop.index }}</span
+              >
+              <span class="country">🇧🇷 {{ pais }}</span>
+              <span class="points">{{ promedio | round(2) }}</span>
+              <span class="change positive"
+                >{{ jugador_pais[pais] if pais in jugador_pais else "Jugador no
+                encontrado" }}</span
+              >
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="{{ url_for('static', filename='JS/Dash.js') }}"></script>
+  </body>
+</html>

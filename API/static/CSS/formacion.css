@@ -95,6 +95,26 @@ body {
     linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
 }
+.formaciones button {
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.formaciones button:hover {
+  background-color: #0056b3;
+}
+
+#once-ideal {
+  margin-top: 1rem;
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 8px;
+}
 
 /* Líneas del campo */
 .center-line {

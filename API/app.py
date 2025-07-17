@@ -1,13 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from Funciones.carga_datos import cargar_datos
 from Funciones.estadisticas import contar_jugadores, mejor_escuadra_general, mejor_jugador_por_pais
 from Funciones.graficos import generar_grafico
-
+from Funciones.mejor_once import seleccionar_jugadores
 app = Flask(__name__)
 
+# Ruta: Página Principal (Dashboard)
 @app.route('/')
 def mostrar_dashboard():
     df = cargar_datos()
+    total_jugadores = cargar_datos()
     jugadores = df.sort_values(by=['overall', 'potential', 'value_eur'], ascending=False).head(15).to_dict(orient='records')
     total_jugadores = contar_jugadores(df)
     cantidad_paises = df['nationality_name'].nunique()
@@ -15,10 +17,35 @@ def mostrar_dashboard():
     
     mejor_pais = mejor_escuadra_general(df).sort_values(ascending=False).head(1).to_dict()
     mejor10_pais = mejor_escuadra_general(df).sort_values(ascending=False).head(10).to_dict()
-    mejores_paises = mejor_escuadra_general(df).sort_values(ascending=False).to_dict()
-    jugador_pais = mejor_jugador_por_pais(df)
 
-    # Diccionario de países por continente...
+    return render_template('Dashboard.html',
+                           total_jugadores=total_jugadores,
+                           numero_pais=cantidad_paises,
+                           primero=mejor_jugador,
+                           best=mejor_pais,
+                           jugadores=jugadores,
+                           paises_mejores=mejor10_pais)
+
+# Ruta: Mejores Países
+@app.route('/mejores-paises')
+def mejores_paises():
+    try:
+        df = cargar_datos()
+        mejores_paises = mejor_escuadra_general(df).sort_values(ascending=False).to_dict()
+        jugador_pais = mejor_jugador_por_pais(df)
+        return render_template('Mejorespaises.html',
+                               total_paises=mejores_paises,
+                               jugador_pais=jugador_pais)
+    except Exception as e:
+        # Muestra el error en la consola y devuelve una página de error simple
+        print(f"Error en /mejores-paises: {e}")
+        return render_template('error.html', mensaje_error=str(e)), 500
+
+# Ruta: Estadísticas Adicionales
+@app.route('/estadisticas')
+def estadisticas():
+    df = cargar_datos()
+     # Diccionario de países por continente...
     paises_por_continente = {"África": [
         "Algeria", "Angola", "Benin", "Botswana", "Burkina Faso", "Burundi", "Cameroon", "Cape Verde Islands",
         "Central African Republic", "Chad", "Comoros", "Congo", "Congo DR", "Côte d'Ivoire", "Djibouti", "Egypt",
@@ -59,20 +86,32 @@ def mostrar_dashboard():
         paises_dict_total.update(lista)
     paises_presentes = paises_dict_total.intersection(paises_dataset)
     precision_total = round(len(paises_presentes) / len(paises_dict_total) * 100, 1)
-    
+    cantidad_paises = df['nationality_name'].nunique()
     grafico_html = generar_grafico(paises_por_continente)
-
-    return render_template('Dashboard.html',
-                           jugadores=jugadores,
-                           grafico_html=grafico_html,
+    return render_template('Estadisticas.html',
+                           precision_total=precision_total,
                            numero_pais=cantidad_paises,
-                           total_jugadores=total_jugadores,
-                           primero=mejor_jugador,
-                           best=mejor_pais,
-                           paises_mejores=mejor10_pais,
-                           total_paises=mejores_paises,
-                           jugador_pais=jugador_pais,
-                           precision_total=precision_total)
+                           grafico_html=grafico_html)
+
+@app.route('/mejor_11')
+@app.route('/mejor_11/<formacion>')
+def mejor_once(formacion='4-4-2'):
+    df = cargar_datos()
+    formaciones = {
+        "4-4-2": ['GK', 'LB', 'CB', 'CB', 'RB', 'LM', 'CM', 'CM', 'RM', 'ST', 'ST'],
+        "4-3-3": ['GK', 'LB', 'CB', 'CB', 'RB', 'CDM', 'CM', 'CM', 'LW', 'ST', 'RW'],
+        "4-2-3-1": ['GK', 'LB', 'CB', 'CB', 'RB', 'CDM', 'CDM', 'LM', 'CAM', 'RM', 'ST'],
+    }
+
+    if formacion not in formaciones:
+        return jsonify({"error": "Formación no válida"}), 400
+
+    equipo = seleccionar_jugadores(df, formaciones[formacion])
+    return jsonify(equipo)
+
+@app.route('/mejor_once')
+def mostrar_once():
+    return render_template('MejorOnce.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

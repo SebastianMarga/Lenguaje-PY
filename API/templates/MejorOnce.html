@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formación de Fútbol Interactiva</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static' , filename='CSS/formacion.css') }}"
+    />
+    <link
+      href="{{ url_for('static' , filename='CSS/Dash.css') }}"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='img/ICONO.jpg') }}"
+      type="image/x-icon"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-users"></i>
+          <span>FIFA 22</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <h3 class="nav-title">Navegación</h3>
+        <ul class="nav-menu">
+          <li class="nav-item" id="nav-dashboard">
+            <a href="{{ url_for('mostrar_dashboard') }}" class="nav-link">
+              <i class="fas fa-home"></i>
+              <span>Página Principal</span>
+            </a>
+          </li>
+          <li class="nav-item" id="nav-mejor11">
+            <a href="{{ url_for('mostrar_once') }}" class="nav-link">
+              <i class="fas fa-trophy"></i>
+              <span>Mejor 11 del Mundo</span>
+            </a>
+          </li>
+          <li class="nav-item" id="nav-mejores-paises">
+            <a href="{{ url_for('mejores_paises') }}" class="nav-link">
+              <i class="fas fa-flag"></i>
+              <span>Mejores Países</span>
+            </a>
+          </li>
+          <li class="nav-item" id="nav-estadisticas">
+            <a href="{{ url_for('estadisticas') }}" class="nav-link">
+              <i class="fas fa-chart-bar"></i>
+              <span>Estadísticas Adicionales</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>FIFA 22</p>
+      </div>
+    </aside>
+    <main class="main-content">
+      <div class="container">
+        <div class="header-card">
+          <h1>Formación de Fútbol Interactiva</h1>
+
+          <div class="formaciones">
+            <button class="btn" data-formation="4-4-2">4-4-2</button>
+            <button class="btn" data-formation="4-3-3">4-3-3</button>
+            <button class="btn" data-formation="4-2-3-1">4-2-3-1</button>
+          </div>
+
+          <div id="once-ideal"></div>
+
+          <p class="instruction" id="instruction">
+            Haz clic en un jugador para seleccionarlo y luego en el campo para
+            moverlo
+          </p>
+        </div>
+
+        <div class="field-container">
+          <div class="field" id="field">
+            <!-- Líneas del campo -->
+            <div class="center-line"></div>
+            <div class="center-circle">
+              <div class="center-dot"></div>
+            </div>
+
+            <!-- Área grande superior -->
+            <div class="penalty-area top">
+              <div class="goal-area top"></div>
+            </div>
+
+            <!-- Área grande inferior -->
+            <div class="penalty-area bottom">
+              <div class="goal-area bottom"></div>
+            </div>
+
+            <!-- Arcos -->
+            <div class="goal top"></div>
+            <div class="goal bottom"></div>
+
+            <!-- Los jugadores se generarán dinámicamente -->
+          </div>
+        </div>
+
+        <div class="players-info">
+          <h3 id="formation-title">Formación Actual: 4-4-2</h3>
+          <div class="players-grid" id="players-grid">
+            <!-- La información de jugadores se generará dinámicamente -->
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="{{ url_for('static', filename='JS/Dash.js')}}"></script>
+    <script src="{{ url_for('static', filename='JS/script.js')}}"></script>
+  </body>
+</html>
